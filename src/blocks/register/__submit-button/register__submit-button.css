@@ -1,0 +1,15 @@
+.register__submit-button {
+  width: 100%;
+  border-radius: 2px;
+  background-color: rgba(255, 255, 255, 1);
+  cursor: pointer;
+  font-family: 'Inter', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 50px;
+  text-align: center;
+  color: rgba(0, 0, 0, 1);
+  margin-top: 216px;
+  border: 0;
+  padding: 0;
+}

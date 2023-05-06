@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import useForm from '../hooks/useForm';
+import InfoTooltip from './InfoTooltip';
 
-export default function Login({ loginUser, buttonText }) {
+export default function Login({ loginUser, buttonText, isLoginFailed, onClose }) {
   const { form, handleChange } = useForm({
     username: "",
     password: "",
@@ -39,9 +40,10 @@ export default function Login({ loginUser, buttonText }) {
           className="login__submit-button"
           aria-label={`Кнопка ${buttonText}`}
         >
-          Войти
+          {buttonText}
         </button>
       </form>
+      {isLoginFailed && (<InfoTooltip type={false} onClose={onClose} />)}
     </div>
   )
 }

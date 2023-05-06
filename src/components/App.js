@@ -8,18 +8,82 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import EditProfilePopup from './EditProfilePopup.js';
 import EditAvatarPopup from './EditAvatarPopup.js';
 import AddPlacePopup from './AddPlacePopup.js';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Register from './Register.js';
 import Login from './Login.js';
+import { register, authorize, getUserData } from '../utils/AuthApi.js';
 
 export default function App() {
 
+  const navigate = useNavigate();
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState({
+    _id: "",
+    email: "",
+  });
+  const [token, setToken] = useState("");
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [registrationStatus, setRegistrationStatus] = useState(false);
+  const [isLoginFailed, setIsLoginFailed] = useState(false);
+
+  const registerUser = ({ email, password }) => {
+    register(email, password)
+      .then((res) => {
+        setRegistrationStatus(true);
+      })
+      .catch((error) => {
+        console.log(`Ошибка регистрации пользователя: ${error}`);
+        setRegistrationStatus(false);
+      })
+      .finally(() => {
+        setIsRegistered(true);
+      });
+  }
+
+  const loginUser = ({ password, email }) => {
+    authorize(email, password)
+      .then((res) => {
+        localStorage.setItem("token", res.token);
+        setToken(res.token);
+      })
+      .catch((error) => {
+        console.log(`Ошибка авторизации пользователя: ${error}`);
+        setIsLoginFailed(true);
+      })
+  }
+
+  useEffect(() => {
+    setToken(localStorage.getItem("token"));
+  }, [])
+
+  useEffect(() => {
+    if (!token) {
+      return;
+    }
+    getUserData(token).then(userData => {
+      setUserData(userData);
+      setIsLoggedIn(true);
+      navigate('/', { replace: true });
+    })
+      .catch(error => console.log(`Ошибка проверки токена: ${error}`));
+  }, [token, navigate])
+
+  const handleLoginTooltipClose = () => {
+    setIsLoginFailed(false);
+  }
+
+  const handleRegisterTooltipClose = () => {
+    if (isRegistered && registrationStatus) {
+      navigate('/', { replace: true });
+    }
+    setIsRegistered(false);
+  }
 
   const handleCardLike = ((card) => {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
@@ -98,22 +162,38 @@ export default function App() {
     setIsAddPlacePopupOpen(true);
   };
 
+
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header />
+        <Header userData={userData} />
         <Routes>
-          <Route path="/" element={< Main
-            cards={cards}
-            onEditAvatar={handleEditAvatarClick}
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onCardClick={handleCardClick}
-            onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
-          />} />
-          <Route path="/sign-up" element={<Register />} />
-          <Route path="/sign-in" element={<Login />} />
+          <Route path="/" element={
+            <Main
+              cards={cards}
+              onEditAvatar={handleEditAvatarClick}
+              onEditProfile={handleEditProfileClick}
+              onAddPlace={handleAddPlaceClick}
+              onCardClick={handleCardClick}
+              onCardLike={handleCardLike}
+              onCardDelete={handleCardDelete}
+            />} />
+          <Route path="/sign-up" element={
+            <Register
+              registerUser={registerUser}
+              buttonText="Зарегистрироваться"
+              isRegistered={isRegistered}
+              registrationStatus={registrationStatus}
+              onClose={handleRegisterTooltipClose}
+            />} />
+          <Route path="/sign-in" element={
+            <Login
+              loginUser={loginUser}
+              isLoginFailed={isLoginFailed}
+              onClose={handleLoginTooltipClose}
+              buttonText="Войти"
+            />} />
         </Routes>
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}

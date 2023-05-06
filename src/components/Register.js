@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import useForm from '../hooks/useForm';
+import InfoTooltip from './InfoTooltip';
 
-export default function Register({ registerUser, buttonText }) {
+export default function Register({ registerUser, buttonText, isRegistered, registrationStatus, onClose }) {
   const { form, handleChange } = useForm({
     email: "",
     password: "",
@@ -9,7 +10,6 @@ export default function Register({ registerUser, buttonText }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    //console.log(form);
     registerUser(form);
   };
 
@@ -23,6 +23,7 @@ export default function Register({ registerUser, buttonText }) {
           id="email"
           name="email"
           placeholder="Email"
+          value={form.email}
           onChange={handleChange}
           required
         />
@@ -32,6 +33,7 @@ export default function Register({ registerUser, buttonText }) {
           id="password"
           name="password"
           placeholder="Пароль"
+          value={form.password}
           onChange={handleChange}
           required
         />
@@ -40,13 +42,16 @@ export default function Register({ registerUser, buttonText }) {
           className="register__submit-button"
           aria-label={`Кнопка ${buttonText}`}
         >
-          Зарегистрироваться
+          {buttonText}
         </button>
       </form>
       <div className="register__signin">
         <p className="register__signin-link">Уже зарегистрированы? </p>
         <Link to="/sign-in" className="register__signin-link">Войти</Link>
       </div>
+
+      {isRegistered && (<InfoTooltip type={registrationStatus} onClose={onClose} />)}
+
     </div>
   )
 }

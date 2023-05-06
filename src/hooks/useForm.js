@@ -11,5 +11,5 @@ export default function useForm(initialState) {
       [input.name]: input.value,
     })
   };
-  return (form, handleChange);
+  return { form, handleChange };
 }

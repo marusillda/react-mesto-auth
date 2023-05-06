@@ -6,6 +6,10 @@
 /*Шапка сайта header*/
 @import url(./blocks/header/header.css);
 @import url(./blocks/header/__logo/header__logo.css);
+@import url(./blocks/header/__navbar/header__navbar.css);
+@import url(./blocks/header/__navbar-link/header__navbar-link.css);
+@import url(./blocks/header/__navbar-link/__navbar-link_exit/header__navbar-link_exit.css);
+@import url(./blocks/header/__navbar-user/header__navbar-user.css);
 /*Секция profile*/
 @import url(./blocks/profile/profile.css);
 @import url(./blocks/profile/__user/profile__user.css);
@@ -61,3 +65,7 @@
 @import url(./blocks/login/__form/login__form.css);
 @import url(./blocks/login/__field/login__field.css);
 @import url(./blocks/login/__submit-button/login__submit-button.css);
+/*Всплывающее окно infoToolTip*/
+@import url(./blocks/popup/__tooltip-title/popup__tooltip-title.css);
+@import url(./blocks/popup/__tooltip-image/popup__tooltip-image.css);
+@import url(./blocks/popup/__tooltip-image/__tooltip-image_error/popup__tooltip-image_error.css);

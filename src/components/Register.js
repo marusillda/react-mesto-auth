@@ -25,6 +25,7 @@ export default function Register({ registerUser, buttonText, isRegistered, regis
           placeholder="Email"
           value={form.email}
           onChange={handleChange}
+          autoComplete="username"
           required
         />
         <input
@@ -35,6 +36,7 @@ export default function Register({ registerUser, buttonText, isRegistered, regis
           placeholder="Пароль"
           value={form.password}
           onChange={handleChange}
+          autoComplete="current-password"
           required
         />
         <button

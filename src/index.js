@@ -19,4 +19,4 @@ root.render(
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 
-document.body.style = 'background-color: black;';
+document.body.style = 'background-color: black; color: rgba(169, 169, 169, 1)';

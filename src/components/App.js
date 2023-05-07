@@ -12,6 +12,7 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import Register from './Register.js';
 import Login from './Login.js';
 import { register, authorize, getUserData } from '../utils/AuthApi.js';
+import ProtectedRoute from './ProtectedRoute.js';
 
 export default function App() {
 
@@ -31,6 +32,7 @@ export default function App() {
   const [isRegistered, setIsRegistered] = useState(false);
   const [registrationStatus, setRegistrationStatus] = useState(false);
   const [isLoginFailed, setIsLoginFailed] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const registerUser = ({ email, password }) => {
     register(email, password)
@@ -68,14 +70,17 @@ export default function App() {
       return;
     }
     getUserData(token).then(userData => {
-      setUserData(userData);
+      setUserData(userData && userData.data);
       setIsLoggedIn(true);
       navigate('/', { replace: true });
     })
       .catch(error => {
         console.log(`Ошибка проверки токена: ${error}`);
         setIsLoggedIn(false);
-      });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      })
   }, [token, navigate])
 
   const handleLoginTooltipClose = () => {
@@ -85,7 +90,7 @@ export default function App() {
   const signOut = (() => {
     localStorage.removeItem("token");
     setToken("");
-    navigate('/signin', { replace: true });
+    navigate('/sign-in', { replace: true });
   })
 
   const handleRegisterTooltipClose = () => {
@@ -172,7 +177,9 @@ export default function App() {
     setIsAddPlacePopupOpen(true);
   };
 
-
+  if (isLoading) {
+    return <div>Загрузка...</div>
+  }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -183,7 +190,8 @@ export default function App() {
         />
         <Routes>
           <Route path="/" element={
-            <Main
+            <ProtectedRoute
+              loggedIn={isLoggedIn}
               cards={cards}
               onEditAvatar={handleEditAvatarClick}
               onEditProfile={handleEditProfileClick}
@@ -191,7 +199,9 @@ export default function App() {
               onCardClick={handleCardClick}
               onCardLike={handleCardLike}
               onCardDelete={handleCardDelete}
-            />} />
+              element={Main}
+            />
+          } />
           <Route path="/sign-up" element={
             <Register
               registerUser={registerUser}

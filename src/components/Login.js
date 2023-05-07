@@ -24,6 +24,7 @@ export default function Login({ loginUser, buttonText, isLoginFailed, onClose })
           name="email"
           placeholder="Email"
           onChange={handleChange}
+          autoComplete="username"
           required
         />
         <input
@@ -33,6 +34,7 @@ export default function Login({ loginUser, buttonText, isLoginFailed, onClose })
           name="password"
           placeholder="Пароль"
           onChange={handleChange}
+          autoComplete="current-password"
           required
         />
         <button

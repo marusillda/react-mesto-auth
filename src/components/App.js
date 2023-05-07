@@ -33,6 +33,8 @@ export default function App() {
   const [registrationStatus, setRegistrationStatus] = useState(false);
   const [isLoginFailed, setIsLoginFailed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  //Флаг окончания загрузки из LocalStorage
+  const [isLocalStorageRead, setIsLocalStorageRead] = useState(false);
 
   const registerUser = ({ email, password }) => {
     register(email, password)
@@ -62,11 +64,13 @@ export default function App() {
 
   useEffect(() => {
     setToken(localStorage.getItem("token"));
+    setIsLocalStorageRead(true);
   }, [])
 
   useEffect(() => {
     if (!token) {
-      setIsLoggedIn(false);
+      // Окончание загрузки только после окончания чтения из LocalStorage для предотвращения "мигания"
+      isLocalStorageRead && setIsLoading(false);
       return;
     }
     getUserData(token).then(userData => {
@@ -80,8 +84,8 @@ export default function App() {
       })
       .finally(() => {
         setIsLoading(false);
-      })
-  }, [token, navigate])
+      });
+  }, [token, navigate, isLocalStorageRead])
 
   const handleLoginTooltipClose = () => {
     setIsLoginFailed(false);
@@ -90,6 +94,11 @@ export default function App() {
   const signOut = (() => {
     localStorage.removeItem("token");
     setToken("");
+    setIsLoggedIn(false);
+    setUserData({
+      _id: "",
+      email: "",
+    });
     navigate('/sign-in', { replace: true });
   })
 

@@ -1,7 +1,7 @@
 import headerLogo from '../images/header-logo.svg';
 import { Link, useLocation } from 'react-router-dom';
 
-export default function Header({ userData }) {
+export default function Header({ userData, signOut }) {
   const { pathname } = useLocation();
   const showRegistration = pathname === '/sign-in';
   const showLogin = pathname === '/sign-up';
@@ -15,7 +15,7 @@ export default function Header({ userData }) {
         {!showLogin && !showRegistration && (
           <>
             <div className="header__navbar-user">{userData.email}</div>
-            <Link to="/sign-in" className="header__navbar-link header__navbar-link_exit">Выйти</Link>
+            <Link to="/sign-in" className="header__navbar-link header__navbar-link_exit" onClick={signOut}>Выйти</Link>
           </>)}
       </div>
     </header>

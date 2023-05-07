@@ -64,6 +64,7 @@ export default function App() {
 
   useEffect(() => {
     if (!token) {
+      setIsLoggedIn(false);
       return;
     }
     getUserData(token).then(userData => {
@@ -71,12 +72,21 @@ export default function App() {
       setIsLoggedIn(true);
       navigate('/', { replace: true });
     })
-      .catch(error => console.log(`Ошибка проверки токена: ${error}`));
+      .catch(error => {
+        console.log(`Ошибка проверки токена: ${error}`);
+        setIsLoggedIn(false);
+      });
   }, [token, navigate])
 
   const handleLoginTooltipClose = () => {
     setIsLoginFailed(false);
   }
+
+  const signOut = (() => {
+    localStorage.removeItem("token");
+    setToken("");
+    navigate('/signin', { replace: true });
+  })
 
   const handleRegisterTooltipClose = () => {
     if (isRegistered && registrationStatus) {
@@ -167,7 +177,10 @@ export default function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header userData={userData} />
+        <Header
+          userData={userData}
+          signOut={signOut}
+        />
         <Routes>
           <Route path="/" element={
             <Main

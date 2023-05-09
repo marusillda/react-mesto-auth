@@ -1,4 +1,5 @@
-export default function PopupWithForm({ name, title, children,  buttonText, onSubmit, isOpen, onClose }) {
+
+export default function PopupWithForm({ name, title, children, buttonText, onSubmit, isOpen, onClose, disabled }) {
   const isOpenClassName = isOpen ? 'popup_opened' : '';
 
   return (
@@ -8,6 +9,7 @@ export default function PopupWithForm({ name, title, children,  buttonText, onSu
         <form className="popup__form" name={name} onSubmit={onSubmit}>
           {children}
           <button
+            disabled={disabled}
             type="submit"
             className="popup__submit-button selectable-black"
             aria-label={`Кнопка ${buttonText}`}

@@ -6,6 +6,7 @@ const useValidation = (value, validations) => {
 
   useEffect(() => {
     const emailRegExp = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+    const urlRegExp = /^(ftp|http|https):\/\/[^ "]+$/;
     const rules = {
       minLength: {
         test: (value, validation) => value.length >= validations[validation],
@@ -18,6 +19,10 @@ const useValidation = (value, validations) => {
       isEmail: {
         test: (value) => emailRegExp.test(String(value).toLowerCase()),
         message: 'Неверный email.'
+      },
+      isURL: {
+        test: (value) => urlRegExp.test(String(value)),
+        message: 'Неверный url.'
       }
     };
     const errors = Object.keys(validations)

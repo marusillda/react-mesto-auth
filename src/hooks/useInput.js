@@ -15,11 +15,17 @@ const useInput = (initialValue, validations) => {
     setIsDirty(true);
   }
 
+  const clearValue = () => {
+    setValue('');
+    setIsDirty(false);
+  }
+
   return {
     value,
     isDirty,
     onChange,
     onFocus,
+    clearValue,
     ...valid
   }
 }

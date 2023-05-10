@@ -20,3 +20,9 @@
   color: rgba(255, 255, 255, 0.8);
   opacity: .4;
 }
+
+@media screen and (max-width: 420px) {
+  .login__submit-button {
+    margin-top: 173px;
+  }
+}

@@ -6,3 +6,10 @@
   justify-content: center;
   width: 358px;
 }
+
+@media screen and (max-width: 420px) {
+  .register {
+    margin: 40px auto 40px auto;
+    max-width: 260px;
+  }
+}

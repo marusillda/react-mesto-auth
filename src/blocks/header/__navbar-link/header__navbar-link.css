@@ -7,3 +7,11 @@
   padding-left: 24px;
   text-decoration: none;
 }
+
+@media screen and (max-width: 420px) {
+  .header__navbar-link {
+    font-size: 14px;
+    padding-left: unset;
+    padding-top: 7px;
+  }
+}

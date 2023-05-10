@@ -1,6 +1,6 @@
 # Проект: Место React
 
-## [Демонстрация сайта](https://marusillda.github.io/mesto-react/)
+## [Демонстрация сайта](https://marusillda.github.io/react-mesto-auth/)
 
 ![Превью проекта](./src/images/preview.jpg)
 

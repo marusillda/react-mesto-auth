@@ -1,8 +1,12 @@
 import { Link } from 'react-router-dom';
 import useForm from '../hooks/useForm';
 import InfoTooltip from './InfoTooltip';
+import useInput from '../hooks/useInput';
 
 export default function Register({ registerUser, buttonText, isRegistered, registrationStatus, onClose }) {
+  const email = useInput('', { isEmpty: true, minLength: 5, isEmail: true });
+  const password = useInput('', { isEmpty: true, minLength: 6 });
+
   const { form, handleChange } = useForm({
     email: "",
     password: "",
@@ -23,23 +27,38 @@ export default function Register({ registerUser, buttonText, isRegistered, regis
           id="email"
           name="email"
           placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
+          value={email.value}
+          onChange={(e) => {
+            email.onChange(e);
+            handleChange(e);
+          }}
+          onFocus={email.onFocus}
           autoComplete="username"
           required
         />
+        <span className="popup__error profile-name-error">
+          {email.isDirty && email.inputErrors.join(' ')}
+        </span>
         <input
           className="register__field"
           type="password"
           id="password"
           name="password"
           placeholder="Пароль"
-          value={form.password}
-          onChange={handleChange}
+          value={password.value}
+          onChange={(e) => {
+            password.onChange(e);
+            handleChange(e);
+          }}
+          onFocus={password.onFocus}
           autoComplete="current-password"
           required
         />
+        <span className="popup__error profile-name-error">
+          {password.isDirty && password.inputErrors.join(' ')}
+        </span>
         <button
+          disabled={!email.inputValid || !password.inputValid}
           type="submit"
           className="register__submit-button"
           aria-label={`Кнопка ${buttonText}`}

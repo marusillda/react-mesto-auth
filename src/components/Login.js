@@ -1,10 +1,10 @@
-import { Link } from 'react-router-dom';
 import useForm from '../hooks/useForm';
 import InfoTooltip from './InfoTooltip';
 
 export default function Login({ loginUser, buttonText, isLoginFailed, onClose }) {
+
   const { form, handleChange } = useForm({
-    username: "",
+    email: "",
     password: "",
   });
 
@@ -38,6 +38,7 @@ export default function Login({ loginUser, buttonText, isLoginFailed, onClose })
           required
         />
         <button
+          disabled={!form.email || !form.password}
           type="submit"
           className="login__submit-button"
           aria-label={`Кнопка ${buttonText}`}

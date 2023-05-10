@@ -4,8 +4,8 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import useInput from '../hooks/useInput';
 
 export default function EditProfilePopup({ onUpdateUser, isOpen, onClose }) {
-  const name = useInput('', { isEmpty: true, minLength: 3 });
-  const description = useInput('', { isEmpty: true, minLength: 5 });
+  const name = useInput('', { isEmpty: true, minLength: 2 });
+  const description = useInput('', { isEmpty: true, minLength: 2 });
 
   const currentUser = useContext(CurrentUserContext);
 
@@ -41,8 +41,6 @@ export default function EditProfilePopup({ onUpdateUser, isOpen, onClose }) {
         className="popup__field"
         placeholder="Имя"
         required
-        minLength="2"
-        maxLength="40"
         onChange={name.onChange}
         onFocus={name.onFocus}
       />
@@ -57,8 +55,6 @@ export default function EditProfilePopup({ onUpdateUser, isOpen, onClose }) {
         className="popup__field"
         placeholder="Профессия"
         required
-        minLength="2"
-        maxLength="200"
         onChange={description.onChange}
         onFocus={description.onFocus}
       />

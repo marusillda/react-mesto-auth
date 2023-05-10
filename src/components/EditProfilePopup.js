@@ -1,33 +1,27 @@
-import { useState, useEffect, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import PopupWithForm from "./PopupWithForm";
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import useInput from '../hooks/useInput';
 
 export default function EditProfilePopup({ onUpdateUser, isOpen, onClose }) {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const name = useInput('', { isEmpty: true, minLength: 3 });
+  const description = useInput('', { isEmpty: true, minLength: 5 });
+
   const currentUser = useContext(CurrentUserContext);
-
-  const handleNameChange = ((e) => {
-    setName(e.target.value);
-  });
-
-  const handleDescriptionChange = ((e) => {
-    setDescription(e.target.value);
-  });
 
   const handleSubmit = ((e) => {
     e.preventDefault();
     onUpdateUser({
-      name,
-      about: description,
+      name: name.value,
+      about: description.value,
     });
   });
 
   useEffect(() => {
-    setName(currentUser.name || '');
-    setDescription(currentUser.about || '');
+    name.setValue(currentUser.name || '');
+    description.setValue(currentUser.about || '');
+    // eslint-disable-next-line
   }, [currentUser, isOpen]);
-
 
   return (
     <PopupWithForm
@@ -37,32 +31,40 @@ export default function EditProfilePopup({ onUpdateUser, isOpen, onClose }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
+      disabled={!name.inputValid || !description.inputValid}
     >
       <input
         type="text"
         id="profile-name"
-        value={name} name="name"
+        value={name.value}
+        name="name"
         className="popup__field"
         placeholder="Имя"
         required
         minLength="2"
         maxLength="40"
-        onChange={handleNameChange}
+        onChange={name.onChange}
+        onFocus={name.onFocus}
       />
-      <span className="popup__error profile-name-error"></span>
+      <span className="popup__error profile-name-error">
+        {name.isDirty && name.inputErrors.join(' ')}
+      </span>
       <input
         type="text"
         id="profile-about"
-        value={description}
+        value={description.value}
         name="about"
         className="popup__field"
         placeholder="Профессия"
         required
         minLength="2"
         maxLength="200"
-        onChange={handleDescriptionChange}
+        onChange={description.onChange}
+        onFocus={description.onFocus}
       />
-      <span className="popup__error profile-about-error"></span>
+      <span className="popup__error profile-about-error">
+        {description.isDirty && description.inputErrors.join(' ')}
+      </span>
     </PopupWithForm>
   )
 }

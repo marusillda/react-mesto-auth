@@ -7,6 +7,7 @@ import { HashRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  //BrowserRouter заменен на HashRouter для корректной работы на github pages
   <React.StrictMode>
     <HashRouter>
       <App />

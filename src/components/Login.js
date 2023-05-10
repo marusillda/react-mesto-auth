@@ -40,7 +40,7 @@ export default function Login({ loginUser, buttonText, isLoginFailed, onClose })
         <button
           disabled={!form.email || !form.password}
           type="submit"
-          className="login__submit-button"
+          className="login__submit-button selectable-white"
           aria-label={`Кнопка ${buttonText}`}
         >
           {buttonText}

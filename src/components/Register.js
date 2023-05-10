@@ -60,7 +60,7 @@ export default function Register({ registerUser, buttonText, isRegistered, regis
         <button
           disabled={!email.inputValid || !password.inputValid}
           type="submit"
-          className="register__submit-button"
+          className="register__submit-button selectable-white"
           aria-label={`Кнопка ${buttonText}`}
         >
           {buttonText}
@@ -68,7 +68,7 @@ export default function Register({ registerUser, buttonText, isRegistered, regis
       </form>
       <div className="register__signin">
         <p className="register__signin-link">Уже зарегистрированы? </p>
-        <Link to="/sign-in" className="register__signin-link">Войти</Link>
+        <Link to="/sign-in" className="register__signin-link selectable-white">Войти</Link>
       </div>
 
       {isRegistered && (<InfoTooltip type={registrationStatus} onClose={onClose} />)}

@@ -10,8 +10,8 @@ export default function Header({ userData, signOut }) {
     <header className="header">
       <img className="header__logo" src={headerLogo} alt="Логотип сайта Место" />
       <div className="header__navbar">
-        {showRegistration && (<Link to="/sign-up" className="header__navbar-link">Регистрация</Link>)}
-        {showLogin && (<Link to="/sign-in" className="header__navbar-link">Войти</Link>)}
+        {showRegistration && (<Link to="/sign-up" className="header__navbar-link selectable-white">Регистрация</Link>)}
+        {showLogin && (<Link to="/sign-in" className="header__navbar-link selectable-white">Войти</Link>)}
         {!showLogin && !showRegistration && (
           <>
             <div className="header__navbar-user">{userData.email}</div>

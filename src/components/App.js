@@ -13,6 +13,7 @@ import Register from './Register.js';
 import Login from './Login.js';
 import { register, authorize, getUserData } from '../utils/AuthApi.js';
 import ProtectedRoute from './ProtectedRoute.js';
+import InfoTooltip from './InfoTooltip.js';
 
 export default function App() {
 
@@ -35,6 +36,9 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   //Флаг окончания загрузки из LocalStorage
   const [isLocalStorageRead, setIsLocalStorageRead] = useState(false);
+  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+  const [tooltipType, setTooltipType] = useState(false);
+
 
   const registerUser = ({ email, password }) => {
     register(email, password)
@@ -87,9 +91,16 @@ export default function App() {
       });
   }, [token, navigate, isLocalStorageRead])
 
-  const handleLoginTooltipClose = () => {
-    setIsLoginFailed(false);
-  }
+  useEffect(() => {
+    setIsTooltipOpen(isLoginFailed);
+    setTooltipType(false);
+  }, [isLoginFailed]);
+
+  useEffect(() => {
+    setIsTooltipOpen(isRegistered);
+    setTooltipType(registrationStatus);
+    // eslint-disable-next-line
+  }, [isRegistered]);
 
   const signOut = (() => {
     localStorage.removeItem("token");
@@ -172,6 +183,8 @@ export default function App() {
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setSelectedCard({});
+    setIsLoginFailed(false);
+    handleRegisterTooltipClose();
   };
 
   const handleEditAvatarClick = () => {
@@ -185,6 +198,23 @@ export default function App() {
   const handleAddPlaceClick = () => {
     setIsAddPlacePopupOpen(true);
   };
+
+  const isOpen = isEditAvatarPopupOpen || isEditProfilePopupOpen || isAddPlacePopupOpen || isTooltipOpen || selectedCard.link;
+
+  useEffect(() => {
+    function closeByEscape(evt) {
+      if (evt.key === 'Escape') {
+        closeAllPopups();
+      }
+    }
+    if (isOpen) { // навешиваем только при открытии
+      document.addEventListener('keydown', closeByEscape);
+      return () => {
+        document.removeEventListener('keydown', closeByEscape);
+      }
+    }
+    // eslint-disable-next-line
+  }, [isOpen]);
 
   if (isLoading) {
     return <div>Загрузка...</div>
@@ -215,15 +245,10 @@ export default function App() {
             <Register
               registerUser={registerUser}
               buttonText="Зарегистрироваться"
-              isRegistered={isRegistered}
-              registrationStatus={registrationStatus}
-              onClose={handleRegisterTooltipClose}
             />} />
           <Route path="/sign-in" element={
             <Login
               loginUser={loginUser}
-              isLoginFailed={isLoginFailed}
-              onClose={handleLoginTooltipClose}
               buttonText="Войти"
             />} />
         </Routes>
@@ -251,6 +276,7 @@ export default function App() {
           card={selectedCard}
           onClose={closeAllPopups}
         />
+        {isTooltipOpen && (<InfoTooltip type={tooltipType} onClose={closeAllPopups} />)}
       </div >
     </CurrentUserContext.Provider>
   );

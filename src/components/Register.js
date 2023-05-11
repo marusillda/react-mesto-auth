@@ -1,20 +1,12 @@
 import { Link } from 'react-router-dom';
-import useForm from '../hooks/useForm';
-import InfoTooltip from './InfoTooltip';
-import useInput from '../hooks/useInput';
+import { useFormAndValidation } from '../hooks/useFormAndValidation';
 
-export default function Register({ registerUser, buttonText, isRegistered, registrationStatus, onClose }) {
-  const email = useInput('', { isEmpty: true, minLength: 5, isEmail: true });
-  const password = useInput('', { isEmpty: true, minLength: 6 });
-
-  const { form, handleChange } = useForm({
-    email: "",
-    password: "",
-  });
+export default function Register({ registerUser, buttonText }) {
+  const { values, handleChange, errors, isValid } = useFormAndValidation()
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    registerUser(form);
+    registerUser(values);
   };
 
   return (
@@ -27,17 +19,13 @@ export default function Register({ registerUser, buttonText, isRegistered, regis
           id="email"
           name="email"
           placeholder="Email"
-          value={email.value}
-          onChange={(e) => {
-            email.onChange(e);
-            handleChange(e);
-          }}
-          onFocus={email.onFocus}
+          value={values.email || ''}
+          onChange={handleChange}
           autoComplete="username"
           required
         />
         <span className="popup__error profile-name-error">
-          {email.isDirty && email.inputErrors.join(' ')}
+          {errors.email}
         </span>
         <input
           className="register__field"
@@ -45,20 +33,17 @@ export default function Register({ registerUser, buttonText, isRegistered, regis
           id="password"
           name="password"
           placeholder="Пароль"
-          value={password.value}
-          onChange={(e) => {
-            password.onChange(e);
-            handleChange(e);
-          }}
-          onFocus={password.onFocus}
+          minLength={3}
+          value={values.password || ''}
+          onChange={handleChange}
           autoComplete="current-password"
           required
         />
         <span className="popup__error profile-name-error">
-          {password.isDirty && password.inputErrors.join(' ')}
+          {errors.password}
         </span>
         <button
-          disabled={!email.inputValid || !password.inputValid}
+          disabled={!isValid}
           type="submit"
           className="register__submit-button selectable-white"
           aria-label={`Кнопка ${buttonText}`}
@@ -70,9 +55,6 @@ export default function Register({ registerUser, buttonText, isRegistered, regis
         <p className="register__signin-link">Уже зарегистрированы? </p>
         <Link to="/sign-in" className="register__signin-link selectable-white">Войти</Link>
       </div>
-
-      {isRegistered && (<InfoTooltip type={registrationStatus} onClose={onClose} />)}
-
     </div>
   )
 }

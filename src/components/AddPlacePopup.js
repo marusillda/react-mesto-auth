@@ -1,22 +1,20 @@
 import { useEffect } from "react";
 import PopupWithForm from "./PopupWithForm";
-import useInput from '../hooks/useInput';
+import { useFormAndValidation } from '../hooks/useFormAndValidation';
 
 export default function AddPlacePopup({ onAddPlace, isOpen, onClose, }) {
-  const cardName = useInput('', { isEmpty: true, minLength: 2 });
-  const link = useInput('', { isEmpty: true, isURL: true });
+  const { values, handleChange, errors, isValid, resetForm } = useFormAndValidation()
 
   const handleSubmit = ((e) => {
     e.preventDefault();
     onAddPlace({
-      name: cardName.value,
-      link: link.value,
+      name: values.name,
+      link: values.link,
     })
   });
 
   useEffect(() => {
-    cardName.clearValue();
-    link.clearValue();
+    resetForm();
     // eslint-disable-next-line
   }, [isOpen]);
 
@@ -28,7 +26,7 @@ export default function AddPlacePopup({ onAddPlace, isOpen, onClose, }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      disabled={!cardName.inputValid || !link.inputValid}
+      disabled={!isValid}
     >
       <input
         type="text"
@@ -37,25 +35,26 @@ export default function AddPlacePopup({ onAddPlace, isOpen, onClose, }) {
         className="popup__field"
         placeholder="Название"
         required
-        value={cardName.value}
-        onChange={cardName.onChange}
-        onFocus={cardName.onFocus}
+        minLength={2}
+        maxLength={20}
+        value={values.name || ''}
+        onChange={handleChange}
       />
       <span className="popup__error card-name-error">
-        {cardName.isDirty && cardName.inputErrors.join(' ')}
+        {errors.name}
       </span>
       <input
-        type="url" id="card-link"
+        type="url"
+        id="card-link"
         name="link"
         className="popup__field"
         placeholder="Ссылка на картинку"
         required
-        value={link.value}
-        onChange={link.onChange}
-        onFocus={link.onFocus}
+        value={values.link || ''}
+        onChange={handleChange}
       />
       <span className="popup__error card-link-error">
-        {link.isDirty && link.inputErrors.join(' ')}
+        {errors.link}
       </span>
     </PopupWithForm>
   )

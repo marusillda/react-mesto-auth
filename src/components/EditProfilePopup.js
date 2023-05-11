@@ -1,25 +1,26 @@
 import { useEffect, useContext } from 'react';
 import PopupWithForm from "./PopupWithForm";
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
-import useInput from '../hooks/useInput';
+import { useFormAndValidation } from '../hooks/useFormAndValidation';
 
 export default function EditProfilePopup({ onUpdateUser, isOpen, onClose }) {
-  const name = useInput('', { isEmpty: true, minLength: 2 });
-  const description = useInput('', { isEmpty: true, minLength: 2 });
+  const { values, handleChange, errors, isValid, setValues } = useFormAndValidation()
 
   const currentUser = useContext(CurrentUserContext);
 
   const handleSubmit = ((e) => {
     e.preventDefault();
     onUpdateUser({
-      name: name.value,
-      about: description.value,
+      name: values.name,
+      about: values.about,
     });
   });
 
   useEffect(() => {
-    name.setValue(currentUser.name || '');
-    description.setValue(currentUser.about || '');
+    setValues({
+      name: currentUser.name || '',
+      about: currentUser.about || '',
+    })
     // eslint-disable-next-line
   }, [currentUser, isOpen]);
 
@@ -31,35 +32,37 @@ export default function EditProfilePopup({ onUpdateUser, isOpen, onClose }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      disabled={!name.inputValid || !description.inputValid}
+      disabled={!isValid}
     >
       <input
         type="text"
         id="profile-name"
-        value={name.value}
+        value={values.name || ''}
         name="name"
         className="popup__field"
         placeholder="Имя"
         required
-        onChange={name.onChange}
-        onFocus={name.onFocus}
+        minLength={2}
+        maxLength={15}
+        onChange={handleChange}
       />
       <span className="popup__error profile-name-error">
-        {name.isDirty && name.inputErrors.join(' ')}
+        {errors.name}
       </span>
       <input
         type="text"
         id="profile-about"
-        value={description.value}
+        value={values.about || ''}
         name="about"
         className="popup__field"
         placeholder="Профессия"
         required
-        onChange={description.onChange}
-        onFocus={description.onFocus}
+        minLength={2}
+        maxLength={30}
+        onChange={handleChange}
       />
       <span className="popup__error profile-about-error">
-        {description.isDirty && description.inputErrors.join(' ')}
+        {errors.about}
       </span>
     </PopupWithForm>
   )

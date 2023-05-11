@@ -9,7 +9,7 @@
   line-height: 50px;
   text-align: center;
   color: rgba(0, 0, 0, 1);
-  margin-top: 216px;
+  margin-top: 186px;
   border: 0;
   padding: 0;
 }
@@ -23,6 +23,6 @@
 
 @media screen and (max-width: 420px) {
   .login__submit-button {
-    margin-top: 173px;
+    margin-top: 143px;
   }
 }

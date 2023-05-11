@@ -1,19 +1,19 @@
 import { useEffect } from 'react';
 import PopupWithForm from "./PopupWithForm";
-import useInput from '../hooks/useInput';
+import { useFormAndValidation } from '../hooks/useFormAndValidation';
 
 export default function EditAvatarPopup({ onUpdateAvatar, isOpen, onClose }) {
-  const link = useInput('', { isEmpty: true, isURL: true });
+  const { values, handleChange, errors, isValid, resetForm } = useFormAndValidation()
 
   const handleSubmit = ((e) => {
     e.preventDefault();
     onUpdateAvatar({
-      avatar: link.value,
+      avatar: values.link,
     });
   });
 
   useEffect(() => {
-    link.clearValue();
+    resetForm();
     // eslint-disable-next-line
   }, [isOpen]);
 
@@ -25,7 +25,7 @@ export default function EditAvatarPopup({ onUpdateAvatar, isOpen, onClose }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      disabled={!link.inputValid}
+      disabled={!isValid}
     >
       <input
         type="url"
@@ -33,13 +33,12 @@ export default function EditAvatarPopup({ onUpdateAvatar, isOpen, onClose }) {
         name="link"
         className="popup__field"
         placeholder="Ссылка на картинку"
-        value={link.value}
-        onChange={link.onChange}
-        onFocus={link.onFocus}
+        value={values.link || ''}
+        onChange={handleChange}
         required
       />
       <span className="popup__error profile-name-error">
-        {link.isDirty && link.inputErrors.join(' ')}
+        {errors.link}
       </span>
     </PopupWithForm>
   )
